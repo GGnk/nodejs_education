@@ -9,9 +9,14 @@ const LOG_FILE_PATH = path.join(
 );
 const MS_SET_TIMEOUT = 100;
 
-const logging = (processInfo) => {
-  const logEntry = `${Date.now()} : ${processInfo}\n`;
-  appendFile(LOG_FILE_PATH, logEntry, (err) => {
+const colors = {
+  reset: "\x1b[0m",
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+};
+
+const logging = (text) => {
+  appendFile(LOG_FILE_PATH, `${text}\n`, (err) => {
     if (err) {
       console.error(`Error writing to log file: ${err}`);
     }
@@ -32,9 +37,15 @@ const executeCommand = () => {
       console.error(`Command execution error: ${error}`);
       return;
     }
+    const currentTime = Math.floor(Date.now() / 1000);
     const processInfo = stdout.trim();
-    process.stdout.write(`\x1b[31m \r${processInfo}`);
-    logging(processInfo);
+    const seconds = currentTime % 60;
+    const milliseconds = (currentTime % 1000).toString().padStart(3, "0");
+    const displayText = `\r${colors.green}${seconds}.${milliseconds}${colors.reset}: ${colors.red}${processInfo}${colors.reset}`;
+    process.stdout.write(displayText);
+    if (currentTime % 60 === 0) {
+      logging(`${currentTime}: ${processInfo}`);
+    }
     setTimeout(executeCommand, MS_SET_TIMEOUT);
   });
 };
