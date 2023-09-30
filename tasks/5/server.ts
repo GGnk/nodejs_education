@@ -43,35 +43,37 @@ const routes: Routes = {
     POST: deleteUserHobbies,
   },
 };
-const findRouteHandler = (
+const findRoute = (
   routes: Routes,
   url: string | null,
   method?: HTTP_METHODS
 ) => {
   if (url && method) {
-    console.log("findRouteHandler", { url, method });
     const route = routes[url];
-    return route[method];
+    return {
+      handler: route[method]!,
+      links: route.links
+    };
   }
   return null;
 };
 const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url || "", true);
   const pathname = parsedUrl.pathname;
-  const routeHandler = findRouteHandler(
+  const route = findRoute(
     routes,
     pathname,
     req.method as HTTP_METHODS
   );
 
-  if (!routeHandler) {
+  if (!route) {
     res.statusCode = 404;
     res.end("Not Found");
     return;
   }
 
   try {
-    routeHandler(req, res);
+    route.handler(req, res, route.links);
   } catch (error) {
     res.statusCode = 500;
     res.end("Server error");

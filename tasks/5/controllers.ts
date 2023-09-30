@@ -1,4 +1,4 @@
-import type { IUser, Request, Response } from "./types";
+import type { IUser, Request, Response, TLinks } from "./types";
 import * as db from "./userDB";
 import url from "url";
 
@@ -9,21 +9,24 @@ export const getId = (req: Request) => {
 export const successOperation = (
   res: Response,
   statusCode: number,
-  data?: Partial<IUser> | Partial<IUser>[]
+  data?: any
 ) => {
   res.statusCode = statusCode;
   res.setHeader("Content-Type", "application/json");
   res.end(data ? JSON.stringify({ data }) : "Success!");
 };
-export const getAllUsers = (_req: Request, res: Response) => {
+export const getAllUsers = (_req: Request, res: Response, links?: TLinks) => {
   const data = db.getAllUsers();
-  successOperation(res, 200, data);
+  successOperation(res, 200, {
+    users: data,
+    links
+  });
 };
 
-export const getUser = (req: Request, res: Response) => {
+export const getUser = (req: Request, res: Response, links?: TLinks) => {
   const id = getId(req);
   const data = db.getUserById(id);
-  successOperation(res, 200, data);
+  successOperation(res, 200, {...data, links});
 };
 
 export const updateUser = (req: Request, res: Response) => {
@@ -86,11 +89,14 @@ export const deleteUserHobbies = (req: Request, res: Response) => {
   });
 };
 
-export const getUserHobbies = (req: Request, res: Response) => {
+export const getUserHobbies = (req: Request, res: Response, links?: TLinks) => {
   const id = getId(req);
   const data = db.getUsersHobbies(id);
   res.setHeader("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
   res.setHeader("Expires", new Date(Date.now() + 3600000).toUTCString()); // Expires in 1 hour
 
-  successOperation(res, 200, data);
+  successOperation(res, 200, {
+    ...data,
+    links
+  });
 };

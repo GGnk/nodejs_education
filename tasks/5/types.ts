@@ -6,13 +6,14 @@ export interface Response extends ServerResponse<IncomingMessage> {
   req: IncomingMessage;
 }
 
-type RouteHandler = (req: Request, res: Response) => void;
+type RouteHandler = (req: Request, res: Response, links?: Link[]) => void;
 
 interface Link {
   rel: string;
   href: string;
   method?: string;
 }
+export type TLinks = Link[]
 
 export enum HTTP_METHODS {
   GET = "GET",
@@ -23,7 +24,7 @@ interface RouteConfig {
   [HTTP_METHODS.GET]?: RouteHandler;
   [HTTP_METHODS.POST]?: RouteHandler;
   [HTTP_METHODS.DELETE]?: RouteHandler;
-  ["links"]?: Link[];
+  ["links"]?: TLinks;
 }
 
 export interface Routes {
