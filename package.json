@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "hometask3:task3": "nodemon tasks/3/task3",
+    "hometask5": "nodemon tasks/5/server.ts",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
