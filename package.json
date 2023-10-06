@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "hometask3:task3": "nodemon tasks/3/task3",
+    "hometask6": "nodemon tasks/6/app.ts",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -15,7 +16,9 @@
   "devDependencies": {
     "@types/jest": "^29.5.5",
     "@types/node": "^20.6.3",
+    "@types/express": "^4.17.18",
     "@types/supertest": "^2.0.12",
+    "@types/uuid": "^9.0.4",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3",
@@ -24,7 +27,10 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "axios": "^1.5.0",
-    "csvtojson": "^2.0.10"
+    "axios": "^0.27.2",
+    "csvtojson": "^2.0.10",
+    "express": "^4.18.2",
+    "joi": "^17.10.2",
+    "uuid": "^9.0.1"
   }
 }
