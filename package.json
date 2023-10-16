@@ -7,6 +7,7 @@
     "start": "nodemon index.js",
     "hometask3:task3": "nodemon tasks/3/task3",
     "hometask6": "nodemon tasks/6/app.ts",
+    "hometask5": "nodemon tasks/5/server.ts",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
