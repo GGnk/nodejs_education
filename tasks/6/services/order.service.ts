@@ -1,5 +1,5 @@
-import { addNewOrder } from '../data/order.repository'
+import { addNewOrder } from "../repositories/order.repository";
 
 export function createOrder(userId: string) {
-    return addNewOrder(userId)
+  return addNewOrder(userId);
 }
