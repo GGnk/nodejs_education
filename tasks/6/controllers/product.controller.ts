@@ -1,14 +1,12 @@
 import { Request, Response } from "express";
-import {
-  getAllProducts,
-  getProductById,
-} from "../repositories/product.repository";
+
 import { SERVER_ERROR_RESPONSE } from "./const";
+import { DI } from "../app";
 
 class ProductController {
   public async getAllProducts(req: Request, res: Response): Promise<void> {
     try {
-      const products = getAllProducts();
+      const products = await DI.productRepository.findAll();
       res.status(200).json({
         data: products,
         error: null,
@@ -21,7 +19,7 @@ class ProductController {
   public async getProductById(req: Request, res: Response) {
     try {
       const productId = req.params.id;
-      const product = getProductById(productId);
+      const product = await DI.productRepository.findOne(productId);
       if (!product) {
         res.status(404).json({
           data: null,

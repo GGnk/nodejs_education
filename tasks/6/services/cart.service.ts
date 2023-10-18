@@ -1,11 +1,8 @@
-import {
-  addNewCart,
-  getCartByUserId,
-  removeCart,
-  updateCart,
-} from "../repositories/cart.repository";
+import { Reference, wrap } from "@mikro-orm/core";
+import { DI } from "../app";
 import { CartEntity, cartItemSchema } from "../entities/cart.entity";
 import { CartItemEntity } from "../entities/cartItem.entity";
+import { UserEntity } from "../entities/user.entity";
 
 export async function validateReceivedCartItems(cartItems: CartItemEntity[]) {
   return await Promise.all(
@@ -20,10 +17,14 @@ export async function validateReceivedCartItems(cartItems: CartItemEntity[]) {
   });
 }
 
-export function addProductsToCart(userId: string, cartItems: CartItemEntity[]) {
+export async function addProductsToCart(
+  userId: string,
+  cartItems: CartItemEntity[]
+) {
   try {
-    const usersCart = getCartByUserId(userId);
-    const items: CartItemEntity[] = [...usersCart.items, ...cartItems].reduce(
+    const usersCart = await DI.cartRepository.getCartByUserId(userId);
+
+    const items = [...usersCart.items, ...cartItems].reduce<CartItemEntity[]>(
       (acc, item) => {
         const existingItem = acc.find(
           (accItem) => accItem.product.id === item.product.id
@@ -35,42 +36,48 @@ export function addProductsToCart(userId: string, cartItems: CartItemEntity[]) {
         }
         return acc;
       },
-      [] as CartItemEntity[]
+      []
     );
 
     const updatedCart = {
       ...usersCart,
       items,
     };
-    // @ts-ignore Next tasks
-    updateCart(updatedCart);
+    wrap(usersCart).assign(updatedCart);
+    await DI.em.flush();
 
-    return getCartByUserId(userId);
+    return usersCart;
   } catch (error) {
     console.log(error);
   }
 }
 
-export function createNewCart(userId: string): CartEntity | undefined {
+export async function createNewCart(
+  userId: string
+): Promise<CartEntity | undefined> {
   try {
-    addNewCart(userId);
-    return getCart(userId);
+    const newCart = new CartEntity();
+    newCart.user = Reference.createFromPK(UserEntity, userId);
+
+    await DI.em.flush();
+    return newCart;
   } catch (error) {
     console.error(error);
   }
 }
 
-export function getCart(userId: string): CartEntity | undefined {
+export async function getCart(userId: string): Promise<CartEntity | undefined> {
   try {
-    return getCartByUserId(userId);
+    return await DI.cartRepository.getCartByUserId(userId);
   } catch (error) {
     console.error(error);
   }
 }
 
-export function deleteCart(userId: string): void {
+export async function deleteCart(userId: string): Promise<void> {
   try {
-    removeCart(userId);
+    const usersCart = await DI.cartRepository.getCartByUserId(userId);
+    DI.em.remove(usersCart);
   } catch (error) {
     console.error(error);
   }

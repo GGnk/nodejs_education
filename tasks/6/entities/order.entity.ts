@@ -1,10 +1,21 @@
 import { UserEntity } from "./user.entity";
 import { CartEntity } from "./cart.entity";
-import { Entity, Ref, Property, ManyToOne, Collection } from "@mikro-orm/core";
+import {
+  Entity,
+  Ref,
+  Property,
+  ManyToOne,
+  Collection,
+  EntityRepositoryType,
+} from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
 import { CartItemEntity } from "./cartItem.entity";
+import { OrderRepository } from "../repositories/order.repository";
 
-export type OrderStatus = "created" | "completed";
+export enum OrderStatus {
+  CREATED = "created",
+  COMPLETED = "completed",
+}
 type OrderPayment = {
   type: string;
   address?: any;
@@ -15,7 +26,7 @@ export type OrderDelivery = {
   address: any;
 };
 
-@Entity()
+@Entity({ customRepository: () => OrderRepository })
 export class OrderEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, { nullable: true, ref: true })
   user!: Ref<UserEntity>;
@@ -41,6 +52,7 @@ export class OrderEntity extends BaseEntity {
   @Property()
   total!: number;
 
+  [EntityRepositoryType]?: OrderRepository;
   constructor(
     payment: OrderPayment,
     delivery: OrderDelivery,

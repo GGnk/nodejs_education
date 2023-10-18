@@ -1,7 +1,8 @@
-import { Entity, Property } from "@mikro-orm/core";
+import { Entity, EntityRepositoryType, Property } from "@mikro-orm/core";
 import { BaseEntity } from "./base.entity";
+import { ProductRepository } from "../repositories/product.repository";
 
-@Entity()
+@Entity({ customRepository: () => ProductRepository })
 export class ProductEntity extends BaseEntity {
   @Property()
   title!: string;
@@ -12,6 +13,7 @@ export class ProductEntity extends BaseEntity {
   @Property()
   price!: number;
 
+  [EntityRepositoryType]?: ProductRepository;
   constructor(title: string, description: string, price: number) {
     super();
     this.title = title;

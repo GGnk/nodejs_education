@@ -1,3 +1,4 @@
+import { cartItemSchema } from "./../entities/cart.entity";
 import { Request, Response } from "express";
 import {
   addProductsToCart,
@@ -5,8 +6,8 @@ import {
   getCart,
   validateReceivedCartItems,
 } from "../services/cart.service";
-import { removeCart } from "../repositories/cart.repository";
 import { SERVER_ERROR_RESPONSE, USER_ID_HEADER } from "./const";
+import { DI } from "../app";
 
 class CartController {
   public getCart(req: Request, res: Response): void {
@@ -58,10 +59,11 @@ class CartController {
     }
   }
 
-  public deleteCart(req: Request, res: Response): void {
+  public async deleteCart(req: Request, res: Response): Promise<void> {
     try {
       const userId = req.header(USER_ID_HEADER);
-      removeCart(userId!);
+      const cart = await DI.cartRepository.getCartByUserId(userId!);
+      await DI.em.remove(cart).flush();
       res.status(200).send({
         data: {
           success: true,

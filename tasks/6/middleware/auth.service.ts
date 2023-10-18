@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ifUserExists } from "../repositories/user.repository";
+import { DI } from "../app";
 
 export const authenticationCheck = (
   req: Request,
@@ -8,7 +8,7 @@ export const authenticationCheck = (
 ) => {
   {
     const userId = req.header("x-user-id");
-    if (!userId || !ifUserExists(userId)) {
+    if (!userId || !DI.userRepository.ifUserExists(userId)) {
       return res.status(401).json({
         data: null,
         error: {

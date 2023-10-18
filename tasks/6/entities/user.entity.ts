@@ -1,10 +1,19 @@
-import { Entity, Property, OneToMany, Collection } from "@mikro-orm/core";
+import {
+  Entity,
+  Property,
+  OneToMany,
+  Collection,
+  EntityRepositoryType,
+} from "@mikro-orm/core";
 import { CartEntity } from "./cart.entity";
 import { OrderEntity } from "./order.entity";
 import { BaseEntity } from "./base.entity";
+import { UserRepository } from "../repositories/user.repository";
 
-@Entity()
+@Entity({ customRepository: () => UserRepository })
 export class UserEntity extends BaseEntity {
+  [EntityRepositoryType]?: UserRepository;
+
   @Property()
   name?: string;
 

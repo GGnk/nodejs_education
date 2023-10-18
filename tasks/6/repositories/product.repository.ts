@@ -1,11 +1,4 @@
 import { ProductEntity } from "../entities/product.entity";
+import { EntityRepository } from "@mikro-orm/core";
 
-export function getAllProducts(): ProductEntity[] {
-  // @ts-ignore Next tasks
-  return structuredClone();
-}
-
-export function getProductById(id: string): ProductEntity | undefined {
-  // @ts-ignore Next tasks
-  return PRODUCTS_DB.find((product) => product.id === id);
-}
+export class ProductRepository extends EntityRepository<ProductEntity> {}
