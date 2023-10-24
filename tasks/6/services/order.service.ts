@@ -1,5 +1,5 @@
-import { addNewOrder } from '../data/order.repository'
+import { DI } from "../app";
 
-export function createOrder(userId: string) {
-    return addNewOrder(userId)
+export async function createOrder(userId: string) {
+  return await DI.orderRepository.addNewOrder(userId);
 }
