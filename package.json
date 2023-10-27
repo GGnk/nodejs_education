@@ -7,6 +7,7 @@
     "hometask7": "nodemon tasks/6/app.ts",
     "hometask7:migration:create": "npx mikro-orm migration:create",
     "hometask7:migration:up": "npx mikro-orm migration:up",
+    "hometask8": "nodemon tasks/8/app.ts",
     "start": "nodemon index.js",
     "hometask3:task3": "nodemon tasks/3/task3",
     "hometask6": "nodemon tasks/6/app.ts",
@@ -40,6 +41,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "joi": "^17.10.2",
+    "mongoose": "^7.6.3",
     "uuid": "^9.0.1"
   },
   "mikro-orm": {

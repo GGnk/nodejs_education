@@ -1,12 +1,27 @@
-version: "3"
+version: "3.7"
 services:
-  postgres-db:
-    image: "postgres:12"
-    container_name: "node-gmp-db"
+  mongo:
+    ports:
+      - "27017:27017"
+    image: mongo
+    container_name: mongodb
+    restart: always
+    logging:
+      options:
+        max-size: 1g
     environment:
-      - POSTGRES_USER=node_gmp
-      - POSTGRES_PASSWORD=password123
-      - POSTGRES_DB=node_gmp
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root_example
+    volumes:
+      - ./tasks/8/config/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  mongo-express:
+    image: mongo-express
     restart: always
     ports:
-      - "5432:5432"
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root_example
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: user
+      ME_CONFIG_BASICAUTH_PASSWORD: user_example
