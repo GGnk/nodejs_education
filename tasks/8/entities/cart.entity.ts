@@ -14,7 +14,7 @@ const cartItemSchema = new Schema<ICartItemEntity>({
 });
 
 export interface ICartEntity {
-  id: string;
+  _id: string;
   user: IUserEntity;
   isDeleted: boolean;
   items: TCartItems;

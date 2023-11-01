@@ -5,7 +5,7 @@ import type { IUserEntity } from "./user.entity";
 type ORDER_STATUS = "created" | "completed";
 
 export interface OrderEntity {
-  id: string;
+  _id: string;
   user: IUserEntity;
   cart: ICartEntity;
   items: TCartItems;

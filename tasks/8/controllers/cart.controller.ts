@@ -5,13 +5,13 @@ import {
   deleteCart,
   getCart,
 } from "../services/cart.service";
-import { SERVER_ERROR_RESPONSE, USER_ID_HEADER } from "./const";
+import { SERVER_ERROR_RESPONSE } from "./const";
 
 class CartController {
   public getCart(req: Request, res: Response): void {
     try {
-      const userId = req.header(USER_ID_HEADER);
-      const userCart = getCart(userId!);
+      const userId = req.user._id;
+      const userCart = getCart(userId);
       res.status(200).json({
         data: userCart,
         error: null,
@@ -23,8 +23,8 @@ class CartController {
 
   public createCart(req: Request, res: Response): void {
     try {
-      const userId = req.header(USER_ID_HEADER);
-      const newCart = createNewCart(userId!);
+      const userId = req.user._id;
+      const newCart = createNewCart(userId);
       res.status(201).json({
         data: newCart,
         error: null,
@@ -36,9 +36,9 @@ class CartController {
 
   public async updateCart(req: Request, res: Response): Promise<void> {
     try {
-      const userId = req.header(USER_ID_HEADER);
+      const userId = req.user._id;
       const body = req.body;
-      const updatedCart = addProductsToCart(userId!, body.items!);
+      const updatedCart = addProductsToCart(userId, body.items);
       res.status(200).json({
         data: updatedCart,
         error: null,
@@ -58,8 +58,8 @@ class CartController {
 
   public async deleteCart(req: Request, res: Response): Promise<void> {
     try {
-      const userId = req.header(USER_ID_HEADER);
-      await deleteCart(userId!);
+      const userId = req.user._id;
+      await deleteCart(userId);
       res.status(200).send({
         data: {
           success: true,
