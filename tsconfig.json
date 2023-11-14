@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "allowJs": false
   },
-  "include": ["tasks"]
 }

@@ -25,3 +25,11 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongodb
       ME_CONFIG_BASICAUTH_USERNAME: user
       ME_CONFIG_BASICAUTH_PASSWORD: user_example
+  web:
+    image: my-node-app
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://root:root_example@127.0.0.1:27017/admin
